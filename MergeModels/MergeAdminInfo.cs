@@ -8,6 +8,7 @@ namespace fekon_repository_datamodel.MergeModels
     public class MergeAdminInfo
     {
         public AspNetUser AspNetUser { get; set; }
+        public string UserRole { get; set; }
         public IEnumerable<ActivityDetail> UserActivityDetail { get; set; }
         public RefEmployee RefEmployee { get; set; }
         public int TotalRepositorySubmit { get; set; }

@@ -13,14 +13,16 @@ namespace fekon_repository_datamodel.MergeModels
         public int TotalItem { get; private set; }
         public int PageSize { get; private set; }
         public int TotalItemDisplay { get; private set; }
+        public Dictionary<string, string> RouteData { get; private set; }
 
-        public SearchPaging(List<T> items, int count, int pageIndex, int pageSize)
+    public SearchPaging(List<T> items, int count, int pageIndex, int pageSize, Dictionary<string, string> routedata)
         {
             PageIndex = pageIndex;
             TotalPages = (int)Math.Ceiling(count / (double)pageSize);
             TotalItem = count;
             PageSize = pageIndex;
             TotalItemDisplay = items.Count;
+            RouteData = routedata;
             AddRange(items);
         }
 
@@ -32,18 +34,18 @@ namespace fekon_repository_datamodel.MergeModels
 
         public KeyValuePair<int, int> RangeData => SetRangeData(PageIndex, TotalItem, PageSize);
 
-        public static async Task<SearchPaging<T>> CreateAsync(IQueryable<T> source, int pageIndex, int pageSize)
+        public static async Task<SearchPaging<T>> CreateAsync(IQueryable<T> source, int pageIndex, int pageSize, Dictionary<string,string> routedata = null)
         {
             int count = await source.CountAsync();
             List<T> items = await source.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
-            return new SearchPaging<T>(items, count, pageIndex, pageSize);
+            return new SearchPaging<T>(items, count, pageIndex, pageSize, routedata ?? new Dictionary<string, string>());
         }
 
-        public static SearchPaging<T> CreateFromList(IQueryable<T> source, int pageIndex, int pageSize)
+        public static SearchPaging<T> CreateFromList(IQueryable<T> source, int pageIndex, int pageSize, Dictionary<string, string> routedata = null)
         {
             int count = source.Count();
             List<T> items = source.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList();
-            return new SearchPaging<T>(items, count, pageIndex, pageSize);
+            return new SearchPaging<T>(items, count, pageIndex, pageSize, routedata ?? null);
         }
 
         private static List<int> SetPageNumberList(int index, int totalPage, int treshold)

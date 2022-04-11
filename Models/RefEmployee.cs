@@ -11,7 +11,7 @@ namespace fekon_repository_datamodel.Models
         public string UserId { get; set; }
         public string EmployeeName { get; set; }
         public string EmployeeNo { get; set; }
-        public string IsActive { get; set; }
+        public bool IsActive { get; set; }
         public string ProfilePicLoc { get; set; }
 
         public virtual AspNetUser User { get; set; }
