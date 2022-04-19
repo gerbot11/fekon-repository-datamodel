@@ -46,9 +46,6 @@ namespace fekon_repository_datamodel.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-
-           // optionsBuilder.UseMySQL("server=localhost;database=fekonrepository;user=root;");
-            
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
