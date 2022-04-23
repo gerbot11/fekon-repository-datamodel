@@ -12,6 +12,7 @@ namespace fekon_repository_datamodel.Models
             FileDetails = new HashSet<FileDetail>();
             RepoStatistics = new HashSet<RepoStatistic>();
             RepositoryDs = new HashSet<RepositoryD>();
+            RepositoryKeywords = new HashSet<RepositoryKeyword>();
         }
 
         public long RepositoryId { get; set; }
@@ -33,5 +34,6 @@ namespace fekon_repository_datamodel.Models
         public virtual ICollection<FileDetail> FileDetails { get; set; }
         public virtual ICollection<RepoStatistic> RepoStatistics { get; set; }
         public virtual ICollection<RepositoryD> RepositoryDs { get; set; }
+        public virtual ICollection<RepositoryKeyword> RepositoryKeywords { get; set; }
     }
 }

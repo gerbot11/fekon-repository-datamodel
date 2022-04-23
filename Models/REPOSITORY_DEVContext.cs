@@ -33,19 +33,22 @@ namespace fekon_repository_datamodel.Models
         public virtual DbSet<FileMonitoringHist> FileMonitoringHists { get; set; }
         public virtual DbSet<FileMonitoringResult> FileMonitoringResults { get; set; }
         public virtual DbSet<Publisher> Publishers { get; set; }
-        public virtual DbSet<RefCategorySearch> RefCategorySearches { get; set; }
         public virtual DbSet<RefCollection> RefCollections { get; set; }
         public virtual DbSet<RefEmployee> RefEmployees { get; set; }
+        public virtual DbSet<RefKeyword> RefKeywords { get; set; }
         public virtual DbSet<RefLanguage> RefLanguages { get; set; }
-        public virtual DbSet<RefType> RefTypes { get; set; }
-        public virtual DbSet<RefUser> RefUsers { get; set; }
+        public virtual DbSet<RefRepositoryFileType> RefRepositoryFileTypes { get; set; }
         public virtual DbSet<RepoStatistic> RepoStatistics { get; set; }
         public virtual DbSet<Repository> Repositories { get; set; }
         public virtual DbSet<RepositoryD> RepositoryDs { get; set; }
+        public virtual DbSet<RepositoryKeyword> RepositoryKeywords { get; set; }
         public virtual DbSet<UserActivityHist> UserActivityHists { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            if (!optionsBuilder.IsConfigured)
+            {
+            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -234,6 +237,10 @@ namespace fekon_repository_datamodel.Models
 
                 entity.Property(e => e.DownloadDate).HasColumnType("datetime");
 
+                entity.Property(e => e.ErrorMsg)
+                    .HasMaxLength(1000)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.UserId)
                     .IsRequired()
                     .HasMaxLength(450);
@@ -272,14 +279,14 @@ namespace fekon_repository_datamodel.Models
                     .HasMaxLength(10)
                     .IsUnicode(false);
 
-                entity.Property(e => e.FileType)
-                    .IsRequired()
-                    .HasMaxLength(5)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.OriginFileName)
                     .HasMaxLength(1000)
                     .IsUnicode(false);
+
+                entity.HasOne(d => d.RefRepositoryFileType)
+                    .WithMany(p => p.FileDetails)
+                    .HasForeignKey(d => d.RefRepositoryFileTypeId)
+                    .HasConstraintName("FK__FileDetai__RefRe__69FBBC1F");
 
                 entity.HasOne(d => d.Repository)
                     .WithMany(p => p.FileDetails)
@@ -322,25 +329,6 @@ namespace fekon_repository_datamodel.Models
                     .IsUnicode(false);
             });
 
-            modelBuilder.Entity<RefCategorySearch>(entity =>
-            {
-                entity.ToTable("RefCategorySearch");
-
-                entity.Property(e => e.CategoryName)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Property)
-                    .IsRequired()
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.PropertyCategory)
-                    .IsRequired()
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-            });
-
             modelBuilder.Entity<RefCollection>(entity =>
             {
                 entity.ToTable("RefCollection");
@@ -369,11 +357,6 @@ namespace fekon_repository_datamodel.Models
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.Property(e => e.IsActive)
-                    .HasMaxLength(1)
-                    .IsUnicode(false)
-                    .IsFixedLength(true);
-
                 entity.Property(e => e.ProfilePicLoc)
                     .HasMaxLength(450)
                     .IsUnicode(false);
@@ -384,6 +367,21 @@ namespace fekon_repository_datamodel.Models
                     .WithMany(p => p.RefEmployees)
                     .HasForeignKey(d => d.UserId)
                     .HasConstraintName("FK__RefEmploy__UserI__4F47C5E3");
+            });
+
+            modelBuilder.Entity<RefKeyword>(entity =>
+            {
+                entity.ToTable("RefKeyword");
+
+                entity.Property(e => e.KeywordCode)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.KeywordName)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<RefLanguage>(entity =>
@@ -403,52 +401,16 @@ namespace fekon_repository_datamodel.Models
                     .IsUnicode(false);
             });
 
-            modelBuilder.Entity<RefType>(entity =>
+            modelBuilder.Entity<RefRepositoryFileType>(entity =>
             {
-                entity.ToTable("RefType");
+                entity.ToTable("RefRepositoryFileType");
 
-                entity.Property(e => e.TypeCode)
+                entity.Property(e => e.RepositoryFileTypeCode)
                     .IsRequired()
-                    .HasMaxLength(10)
+                    .HasMaxLength(2)
                     .IsUnicode(false);
 
-                entity.Property(e => e.TypeName)
-                    .IsRequired()
-                    .HasMaxLength(20)
-                    .IsUnicode(false);
-            });
-
-            modelBuilder.Entity<RefUser>(entity =>
-            {
-                entity.HasKey(e => e.UserId)
-                    .HasName("PK__RefUser__1788CC4C479AB583");
-
-                entity.ToTable("RefUser");
-
-                entity.Property(e => e.Email)
-                    .IsRequired()
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.FullName)
-                    .IsRequired()
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.IsActive)
-                    .IsRequired()
-                    .HasMaxLength(1)
-                    .IsUnicode(false)
-                    .IsFixedLength(true);
-
-                entity.Property(e => e.LastLogin).HasColumnType("datetime");
-
-                entity.Property(e => e.Password)
-                    .IsRequired()
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Username)
+                entity.Property(e => e.RepositoryFileTypeName)
                     .IsRequired()
                     .HasMaxLength(20)
                     .IsUnicode(false);
@@ -524,6 +486,16 @@ namespace fekon_repository_datamodel.Models
                     .HasForeignKey(d => d.RepositoryId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__Repositor__Repos__47DBAE45");
+            });
+
+            modelBuilder.Entity<RepositoryKeyword>(entity =>
+            {
+                entity.ToTable("RepositoryKeyword");
+
+                entity.HasOne(d => d.Repostiory)
+                    .WithMany(p => p.RepositoryKeywords)
+                    .HasForeignKey(d => d.RepostioryId)
+                    .HasConstraintName("FK__Repositor__Repos__671F4F74");
             });
 
             modelBuilder.Entity<UserActivityHist>(entity =>

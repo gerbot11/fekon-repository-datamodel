@@ -15,13 +15,14 @@ namespace fekon_repository_datamodel.Models
 
         public long FileDetailId { get; set; }
         public string FileName { get; set; }
-        public string FileType { get; set; }
         public string FilePath { get; set; }
         public long? RepositoryId { get; set; }
         public string FileSize { get; set; }
         public string FileExt { get; set; }
         public string OriginFileName { get; set; }
+        public long? RefRepositoryFileTypeId { get; set; }
 
+        public virtual RefRepositoryFileType RefRepositoryFileType { get; set; }
         public virtual Repository Repository { get; set; }
         public virtual ICollection<DownloadStatistic> DownloadStatistics { get; set; }
         public virtual ICollection<FileMonitoringResult> FileMonitoringResults { get; set; }
