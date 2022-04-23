@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace fekon_repository_datamodel.MergeModels
 {
@@ -17,6 +14,8 @@ namespace fekon_repository_datamodel.MergeModels
         public string Action { get; set; }
         public string RepositoryTitle { get; set; }
         public string FileName { get; set; }
+        public bool DownloadStatus { get; set; }
+        public string ErrorMsg { get; set; }
         public DateTime DateTimeAct { get; set; }
     }
 }
