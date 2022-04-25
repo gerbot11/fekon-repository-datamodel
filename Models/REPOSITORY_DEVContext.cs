@@ -492,6 +492,11 @@ namespace fekon_repository_datamodel.Models
             {
                 entity.ToTable("RepositoryKeyword");
 
+                entity.HasOne(d => d.RefKeyword)
+                    .WithMany(p => p.RepositoryKeywords)
+                    .HasForeignKey(d => d.RefKeywordId)
+                    .HasConstraintName("FK__Repositor__RefKe__6AEFE058");
+
                 entity.HasOne(d => d.Repostiory)
                     .WithMany(p => p.RepositoryKeywords)
                     .HasForeignKey(d => d.RepostioryId)

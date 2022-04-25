@@ -10,5 +10,6 @@ namespace fekon_repository_datamodel.MergeModels
         public IEnumerable<Author> authors { get; set; }
         public string RefCollName { get; set; }
         public string CollDName { get; set; }
+        public IEnumerable<string> Keywords { get; set; }
     }
 }

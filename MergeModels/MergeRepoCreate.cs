@@ -13,6 +13,7 @@ namespace fekon_repository_datamodel.MergeModels
         public List<RepoFile> repoFile { get; set; }
         public List<string> langCode { get; set; }
         public List<string> fileStatus { get; set; }
+        
     }
 
     public class RepoFile
@@ -20,6 +21,7 @@ namespace fekon_repository_datamodel.MergeModels
         public string FileTypeName { get; set; }
         public string FileTypeCode { get; set; }
         public IFormFile FormFile { get; set; }
+        public bool HasFile { get; set; }
     }
 
     public class CurrentFileInfo
@@ -29,5 +31,7 @@ namespace fekon_repository_datamodel.MergeModels
         public string OriginalName { get; set; }
         public string FileType { get; set; }
         public string FileSize { get; set; }
+        public string Path { get; set; }
+        public string FileStatus { get; set; }
     }
 }
